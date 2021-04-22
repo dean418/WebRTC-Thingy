@@ -5,8 +5,8 @@ class WebSocketWrapper {
         this.peerConnection = new RTCPeerConnection(this.configuration);
 
         this.conn.addEventListener('message', this.onMessage.bind(this));
-        this.conn.onopen = this.onOpen.bind(this);
-        this.conn.onclose = this.onClose;
+        this.conn.addEventListener('open', this.onOpen.bind(this));
+        this.conn.addEventListener('close', this.onClose);
     }
 
     send(data) {
@@ -54,7 +54,7 @@ class WebSocketWrapper {
 
     onOpen() {
         console.log('connected to signaling server');
-        this.createOffer()
+        this.createOffer();
     }
 
     onClose() {
