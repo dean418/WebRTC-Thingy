@@ -1,7 +1,6 @@
 class SignallingServer {
     constructor(url) {
         this.conn = new WebSocket(url);
-
         this.conn.addEventListener('message', this.onMessage.bind(this));
         this.conn.addEventListener('open', this.onOpen.bind(this));
         this.conn.addEventListener('close', this.onClose);
@@ -37,6 +36,7 @@ class SignallingServer {
 
     onOpen() {
         console.log('connected to signaling server');
+        this.createOffer();
     }
 
     onClose() {
