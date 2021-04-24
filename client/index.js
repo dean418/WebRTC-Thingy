@@ -1,4 +1,4 @@
-import {WebRTC} from './webRTC.js';
+import {WebRTC} from './modules/webRTC.js';
 
 const sendBtn = document.getElementById('send');
 const messageBox = document.getElementById('message');

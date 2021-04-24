@@ -1,15 +1,21 @@
 html, body {
     width: 100%;
     margin: 0;
-    display: flex;
-    justify-content: center;
+    /* display: flex; */
+    /* justify-content: center; */
 }
 
-.container {
+.containerAll {
     width: 300px;
     display: flex;
     flex-direction: column;
     border: 2px solid #000;
+}
+
+#container {
+    width: 800px;
+    height: 600px;
+    border: 1px solid grey;
 }
 
 .messageContainer {
