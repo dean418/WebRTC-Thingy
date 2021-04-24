@@ -36,7 +36,6 @@ class SignallingServer {
 
     onOpen() {
         console.log('connected to signaling server');
-        this.createOffer();
     }
 
     onClose() {
