@@ -1,8 +1,6 @@
 html, body {
     width: 100%;
     margin: 0;
-    /* display: flex; */
-    /* justify-content: center; */
 }
 
 .containerAll {
@@ -15,7 +13,6 @@ html, body {
 #container {
     width: 800px;
     height: 600px;
-    border: 1px solid grey;
 }
 
 .messageContainer {

@@ -16,9 +16,24 @@ class WebRTC extends SignallingServer {
         this.dataChannelListener.addEventListener('message', this.handleDataChannelMessage);
     }
 
-    sendRTC(message) {
-        this.dataChannel.send(message);
-        UI.displayMessage(message, 'sender');
+    sendRTC(type, message) {
+        let data = JSON.stringify({type, message});
+
+        this.dataChannel.send(data);
+
+        if (type == 'chat') {
+            UI.displayMessage(message, 'sender');
+        }
+    }
+
+    handleDataChannelMessage(message) {
+        let data = JSON.parse(message.data);
+
+        if (data.type == 'code') {
+            UI.updateCode(data.message);
+        } else {
+            UI.displayMessage(data.message, 'receiver');
+        }
     }
 
     newIceCandidate(event) {
@@ -29,10 +44,6 @@ class WebRTC extends SignallingServer {
 
     setupDataChannel(event) {
         this.dataChannel = event.channel;
-    }
-
-    handleDataChannelMessage(message) {
-        UI.displayMessage(message.data, 'receiver');
     }
 
     async handleAnswer(answer) {
