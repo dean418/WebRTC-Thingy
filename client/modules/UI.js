@@ -15,14 +15,15 @@ class UI {
      */
     static updateCode(code) {
         const model = UI.editor.getModel();
-        if (code != UI.editor.getValue()) {
-            UI.editor.executeEdits(code, [{
-                range: model.getFullModelRange(),
-                text: code,
-                forceMoveMarkers: true
-            }]);
-            UI.executeEditsCalled = true;
-        }
+
+        // Update code in editor with code from peer
+        // and preserve cursor positions
+        UI.editor.executeEdits(code, [{
+            range: model.getFullModelRange(),
+            text: code,
+            forceMoveMarkers: true
+        }], UI.editor.getSelections());
+        UI.executeEditsCalled = true;
     }
 
     /**
