@@ -9,6 +9,10 @@ class UI {
         theme: 'vs-dark'
     });
 
+    /**
+     * Updates the code editor with changes made by peers
+     * @param {*} code - code sent by peers
+     */
     static updateCode(code) {
         const model = UI.editor.getModel();
         if (code != UI.editor.getValue()) {
@@ -21,6 +25,11 @@ class UI {
         }
     }
 
+    /**
+     * Takes a message thats just been sent by a user or a peer and displays it
+     * @param {*} message from either a user or peer
+     * @param {*} user class name to determine who sent the message and display it accordingly
+     */
     static displayMessage (message, user) {
         const messageElement = document.createElement('p');
 

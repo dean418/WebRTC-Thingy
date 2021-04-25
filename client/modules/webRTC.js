@@ -8,7 +8,7 @@ class WebRTC extends SignallingServer {
         this.configuration = {'iceServers': [{'urls': 'stun:stun1.l.google.com:19302'}]};
         this.peerConnection = new RTCPeerConnection(this.configuration);
         this.dataChannelListener = this.peerConnection.createDataChannel('test');
-        this.dataChannel = null;
+        this.dataChannel = null; //defined when a data channel is established
 
         this.peerConnection.addEventListener('icecandidate', this.newIceCandidate.bind(this));
         this.peerConnection.addEventListener('datachannel', this.setupDataChannel.bind(this));
@@ -16,6 +16,12 @@ class WebRTC extends SignallingServer {
         this.dataChannelListener.addEventListener('message', this.handleDataChannelMessage);
     }
 
+    /**
+     * Will send a JSON string through WebRTC to peers
+     *
+     * @param {string} type - type of message being sent to peers [code, chat]
+     * @param {String} message - user message to peers
+     */
     sendRTC(type, message) {
         let data = JSON.stringify({type, message});
 
@@ -26,6 +32,10 @@ class WebRTC extends SignallingServer {
         }
     }
 
+    /**
+     * Will decide what to do with a message received from peers
+     * @param {Object} message - message received from peers
+     */
     handleDataChannelMessage(message) {
         let data = JSON.parse(message.data);
 
@@ -36,21 +46,40 @@ class WebRTC extends SignallingServer {
         }
     }
 
+    /**
+     * Sends new iceCandidates to peers over signalling channel
+     * @param {*} event
+     */
     newIceCandidate(event) {
         if (event.candidate) {
             this.send({iceCandidate: event.candidate});
         }
     }
 
+    /**
+     * Defines dataChannel to be used to send messages later on
+     *
+     * @param {*} event
+     */
     setupDataChannel(event) {
         this.dataChannel = event.channel;
     }
 
+    /**
+     * Sets a remote description for a peer that has replied to an offer
+     *
+     * @param {*} answer
+     */
     async handleAnswer(answer) {
         const remoteDesc = new RTCSessionDescription(answer);
         await this.peerConnection.setRemoteDescription(remoteDesc);
     }
 
+    /**
+     * Replies with an answer object when an offer is received over the signalling channel
+     *
+     * @param {*} offer
+     */
     async handleOffer(offer) {
         try {
             await this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
@@ -63,6 +92,9 @@ class WebRTC extends SignallingServer {
         }
     }
 
+    /**
+     * Creates an offer and sends to peers over the signalling channel
+     */
     async createOffer() {
         const offer = await this.peerConnection.createOffer();
 

@@ -6,12 +6,20 @@ class SignallingServer {
         this.conn.addEventListener('close', this.onClose);
     }
 
+    /**
+     * Turns data into JSON and sends it to peers through a websocket
+     * @param {Object} data
+     */
     send(data) {
         let message = JSON.stringify(data);
 
         this.conn.send(message);
     }
 
+    /**
+     * Determines what to do with a message received from the signalling server
+     * @param {*} message - received from a peer
+     */
     async onMessage(message) {
         let data = JSON.parse(message.data);
         if (data.iceCandidate) {

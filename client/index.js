@@ -8,6 +8,7 @@ const messageBox = document.getElementById('message');
 const offerBtn = document.getElementById('offer');
 
 UI.editor.onDidChangeModelContent(() => {
+    //prevents unnecessary updates being sent
     if (!UI.executeEditsCalled) {
         webRTC.sendRTC('code', UI.editor.getValue());
         return;
