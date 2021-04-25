@@ -11,16 +11,18 @@
 </head>
 <body>
     <div class="containerAll">
-        <div id="messageContainer"></div>
-
-        <div class="controls">
-            Message: <input type="text" id="message">
-            <button id="send">Send</button>
-            <button id="offer">Offer</button>
+        <div id="messageContainer">
+            <div id="resizer"></div>
+            <div id="messages"></div>
+            <div class="controls">
+                <input type="text" id="message" placeholder="Send message">
+                <p class="icon" id="send"><i class="fas fa-paper-plane"></i></p>
+                <p id="offer"><i class="fas fa-network-wired"></i></p>
+            </div>
         </div>
 
+        <div id="container"></div>
     </div>
-    <div id="container"></div>
 
     <script>
         var require = { paths: { vs: './node_modules/monaco-editor/min/vs' } };
@@ -28,6 +30,6 @@
     <script type="text/javascript" src="./node_modules/monaco-editor/min/vs/loader.js"></script>
     <script type="text/javascript" src="./node_modules/monaco-editor/min/vs/editor/editor.main.nls.js"></script>
     <script type="text/javascript" src="./node_modules/monaco-editor/min/vs/editor/editor.main.js"></script>
-    <!-- <script type="module" src="./modules/editor.js"></script> -->
+    <script src="https://kit.fontawesome.com/295f9b81bc.js" crossorigin="anonymous"></script>
 </body>
 </html>

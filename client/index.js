@@ -3,8 +3,9 @@ import {UI} from './modules/UI.js';
 
 const webRTC = new WebRTC();
 
-const sendBtn = document.getElementById('send');
+const resizer = document.getElementById('resizer');
 const messageBox = document.getElementById('message');
+const sendBtn = document.getElementById('send');
 const offerBtn = document.getElementById('offer');
 
 UI.editor.onDidChangeModelContent(() => {
@@ -17,9 +18,18 @@ UI.editor.onDidChangeModelContent(() => {
 });
 
 offerBtn.addEventListener('click', () => {
+    UI.changeConnectState();
     webRTC.createOffer();
 });
 
 sendBtn.addEventListener('click', () => {
     webRTC.sendRTC('chat', messageBox.value);
 });
+
+resizer.addEventListener('mousedown', () => {
+    window.addEventListener('mousemove', UI.resize);
+})
+
+window.addEventListener('mouseup', () => {
+    window.removeEventListener('mousemove', UI.resize);
+})
