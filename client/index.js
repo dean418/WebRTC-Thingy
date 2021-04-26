@@ -17,6 +17,12 @@ UI.editor.onDidChangeModelContent(() => {
     UI.executeEditsCalled = false;
 });
 
+UI.editor.onDidChangeCursorSelection((event) => {
+    webRTC.sendRTC('cursor', {selection: event.selection, secondarySelections: event.secondarySelections});
+});
+
+
+
 offerBtn.addEventListener('click', () => {
     UI.changeConnectState();
     webRTC.createOffer();
@@ -28,8 +34,8 @@ sendBtn.addEventListener('click', () => {
 
 resizer.addEventListener('mousedown', () => {
     window.addEventListener('mousemove', UI.resize);
-})
+});
 
 window.addEventListener('mouseup', () => {
     window.removeEventListener('mousemove', UI.resize);
-})
+});

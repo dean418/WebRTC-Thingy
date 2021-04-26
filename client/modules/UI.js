@@ -10,8 +10,91 @@ class UI {
         language: 'javascript',
         fontSize: "18px",
         theme: 'vs-dark',
-        automaticLayout: true
+        automaticLayout: true,
+        extraEditorClassName: 'superEditor'
     });
+
+    static editorDecorations = [];
+
+    static createPeerCursor(selection) {
+        let {startLineNumber, startColumn, endLineNumber, endColumn, selectionStartColumn, positionColumn, positionLineNumber, selectionStartLineNumber} = selection;
+        let ranges = [];
+
+        UI.editorDecorations = UI.editor.deltaDecorations(UI.editorDecorations, []);
+
+        for (let i = 1; i <= endLineNumber; i++) {
+
+            let range;
+            let options = {className:'test', isWholeLine: false};
+
+            if (i == endLineNumber) {
+                range = new monaco.Range(startLineNumber, startColumn, endLineNumber, endColumn);
+
+                if (positionLineNumber > selectionStartLineNumber) { // selecting left to right
+                    options.className = 'peerCursor peerCursorRight';
+                } else if (positionLineNumber < selectionStartLineNumber) {
+                    options.className = 'peerCursor peerCursorLeft';
+                }
+
+                if (positionLineNumber == selectionStartLineNumber && selectionStartColumn < positionColumn) {
+                    options.className = 'peerCursor peerCursorRight';
+                } else if (positionLineNumber == selectionStartLineNumber && selectionStartColumn > positionColumn){
+                    options.className = 'peerCursor peerCursorLeft';
+                }
+
+                ranges.push({range, options});
+                break;
+            }
+
+            range = new monaco.Range(i,i,i,i);
+            options.isWholeLine = true;
+            ranges.push({range, options});
+        }
+
+        UI.editorDecorations = UI.editor.deltaDecorations(UI.editorDecorations, ranges);
+    }
+
+    static cpc(selection) {
+        console.log(selection);
+        let {startLineNumber, startColumn, endLineNumber, endColumn, selectionStartColumn, positionColumn} = selection;
+        let options = {className:'peerCursor'};
+
+        if (startLineNumber == endLineNumber) {
+
+            if (selectionStartColumn < positionColumn) {
+                options.className += ' peerCursorRight';
+            } else {
+                options.className += ' peerCursorLeft';
+            }
+
+            if (UI.editorDecorations.length > 1) {
+                UI.editorDecorations = UI.editor.deltaDecorations(UI.editorDecorations, []);
+            }
+
+            UI.editorDecorations = UI.editor.deltaDecorations([UI.editorDecorations], [
+                {range: new monaco.Range(startLineNumber, startColumn, endLineNumber, endColumn), options}
+            ]);
+            return;
+        }
+
+        console.log('s: ' + startLineNumber, 'e: ' + endLineNumber);
+        let ranges = []
+
+        for (let i = 1; i <= endLineNumber; i++) {
+            let range = new monaco.Range(i,i,i,i);
+            let options = {className:'test', isWholeLine: true}
+
+            if (i == endLineNumber) {
+                options.isWholeLine = false;
+                options.className += ' peerCursorRight'
+                range = new monaco.Range(endLineNumber, 1, endLineNumber, endColumn)
+            }
+
+            ranges.push({range, options});
+        }
+        UI.editorDecorations = UI.editor.deltaDecorations(UI.editorDecorations, ranges);
+        console.log(UI.editorDecorations);
+    }
 
     static resize (event) {
         messageContainer.style.height = window.innerHeight - event.pageY + 'px';

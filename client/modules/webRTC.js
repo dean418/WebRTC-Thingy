@@ -24,8 +24,9 @@ class WebRTC extends SignallingServer {
      */
     sendRTC(type, message) {
         let data = JSON.stringify({type, message});
-
         this.dataChannel.send(data);
+
+        // console.log(UI.editor.getModel().getAllDecorations())
 
         if (type == 'chat') {
             UI.displayMessage(message, 'sender');
@@ -39,10 +40,16 @@ class WebRTC extends SignallingServer {
     handleDataChannelMessage(message) {
         let data = JSON.parse(message.data);
 
-        if (data.type == 'code') {
-            UI.updateCode(data.message);
-        } else {
-            UI.displayMessage(data.message, 'receiver');
+        switch (data.type) {
+            case 'cursor':
+                UI.createPeerCursor(data.message.selection);
+                break;
+            case 'code':
+                UI.updateCode(data.message);
+                break;
+            case 'chat':
+                UI.displayMessage(data.message, 'receiver');
+                break;
         }
     }
 

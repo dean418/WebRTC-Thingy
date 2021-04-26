@@ -112,3 +112,53 @@ p {
     margin-right: 1%;
     cursor: pointer;
 }
+
+.peerCursor {
+    background: rgba(247, 142, 48, 0.4);
+    pointer-events: none;
+}
+
+.test {
+    /* background: rgba(247, 142, 48, 0.4); */
+    pointer-events: none;
+}
+
+.peerCursor:before {
+    content: '';
+    width: 2px !important;
+    height: 24px;
+    position: absolute;
+    background-color: #f78e30;
+}
+
+.peerCursor:after {
+    content: 'mad developer';
+    top: -19px;
+    width: 100px;
+    height: 20px;
+    position: absolute;
+    color: #000;
+    background-color: #f78e30;
+    font-size: .7rem;
+    z-index: 2;
+}
+
+.peerCursorRight:before {
+    right: 0;
+}
+
+.peerCursorRight:after {
+    right: -13ch;
+    width: 100px;
+    height: 20px;
+}
+
+/* .view-overlays div[class~="peerCursor"]:after {
+    content: ''!important;
+    display: none!important;
+} */
+
+/* .view-overlays div+div[class~="peerCursor"]:last-of-type::after {
+    content: ''!important;
+    display: block!important;
+} */
