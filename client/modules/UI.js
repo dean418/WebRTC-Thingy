@@ -107,11 +107,20 @@ class UI {
      * @param {*} message from either a user or peer
      * @param {*} user class name to determine who sent the message and display it accordingly
      */
-    static displayMessage (message, user) {
-        const messageElement = document.createElement('p');
+    static displayMessage (message, user, userName) {
+        const messageElement = document.createElement('div');
+        const messageInfo = document.createElement('p');
+        const messageText = document.createElement('p');
 
-        messageElement.textContent = message;
-        messageElement.classList.add(user, 'message');
+        messageText.textContent = message;
+        messageText.classList.add(user, 'message');
+
+        let date = new Date();
+        messageInfo.textContent = `${userName} - ${date.getHours()}:${date.getMinutes()}`;
+        messageInfo.classList.add(user, 'messageInfo');
+
+        messageElement.appendChild(messageInfo);
+        messageElement.appendChild(messageText);
 
         messages.appendChild(messageElement);
     }

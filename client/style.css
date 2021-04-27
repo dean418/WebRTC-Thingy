@@ -6,6 +6,7 @@
     --background-light: #2e2e2e;
     --text: #fff;
     --dark-text: #000;
+    --mid-text: rgb(145, 145, 145);
     --gray-highlight: #707070;
     --highlight: #f78e30;
     --orange-transparent: rgba(247, 142, 48, 0.4);
@@ -67,9 +68,15 @@ li {
 
 .message {
     margin: 0;
-    padding-top: 5px;
+    padding: 0 5px;
     padding-bottom: 2px;
     color: var(--text);
+}
+
+.messageInfo {
+    padding: 0 5px;
+    color: var(--mid-text);
+    font-size: .8rem;
 }
 
 #messageContainer {
