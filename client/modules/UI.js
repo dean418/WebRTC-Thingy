@@ -26,11 +26,16 @@ class UI {
         }
     }
 
-    static handlePeerCursor(selection, direction) { // direction = 0 = LTR, direction = 1 = RTL
-        let {startLineNumber, startColumn, endLineNumber, endColumn, selectionStartColumn, positionColumn, positionLineNumber, selectionStartLineNumber} = selection;
+    /**
+     *
+     * @param {Object} selection - An object containing details of a peers selection
+     * @param {Number} direction - 0 indicates a LTR selection, 1 indicates a RTL selection
+     */
+    static handlePeerCursor(selection, direction) {
+        let {startLineNumber, startColumn, endLineNumber, endColumn, selectionStartColumn, positionColumn, positionLineNumber} = selection;
         let ranges = [];
         let options = {className: UI.getCursorDirection(direction), isWholeLine: false};
-
+        console.log(options);
         let model = UI.editor.getModel();
 
         if (startLineNumber == endLineNumber) {
@@ -43,25 +48,40 @@ class UI {
         let range;
         let lastLine;
 
-        console.log(selection);
-
         if (direction) {
             range = new monaco.Range(startLineNumber, startColumn, endLineNumber, selectionStartColumn);
-            lastLine = new monaco.Range(positionLineNumber, positionColumn, positionLineNumber, model.getLineContent(positionLineNumber).length);
+            lastLine = new monaco.Range(positionLineNumber, positionColumn, positionLineNumber, positionColumn);
         } else {
             range = new monaco.Range(startLineNumber, startColumn, endLineNumber, model.getLineContent(endLineNumber-1));
             lastLine = new monaco.Range(endLineNumber, 1, endLineNumber, endColumn);
 
         }
-        ranges.push({range, options: {className: 'test', isWholeLine: false}}, {range: lastLine, options: {className: UI.getCursorDirection(direction), isWholeLine: false}});
+        ranges.push(
+            {range, options: {className: 'test', isWholeLine: false}},
+            {range: lastLine, options: {className: UI.getCursorDirection(direction), isWholeLine: false}});
 
         UI.addPeerCursor(ranges);
     }
 
+    /**
+     * Adds cursors and their selections as a decoration on the editor
+     *
+     * @param {[Object]} ranges - a list of objects containing an instance of monaco.Range and an options object
+     */
     static addPeerCursor(ranges) {
+        let lastSelection = ranges[ranges.length-1];
+
+        if (lastSelection.range.startColumn == 1 && lastSelection.range.endColumn == 1) {
+            lastSelection.options.className = 'peerCursor peerCursorLeft';
+        }
+
         UI.editorDecorations = UI.editor.deltaDecorations(UI.editorDecorations, ranges);
     }
 
+    /**
+     * Resizes the message box when a user drags the resizer
+     * @param {*} event
+     */
     static resize (event) {
         messageContainer.style.height = window.innerHeight - event.pageY + 'px';
     }

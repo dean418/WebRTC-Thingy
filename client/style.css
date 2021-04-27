@@ -152,13 +152,3 @@ p {
     width: 100px;
     height: 20px;
 }
-
-/* .view-overlays div[class~="peerCursor"]:after {
-    content: ''!important;
-    display: none!important;
-} */
-
-/* .view-overlays div+div[class~="peerCursor"]:last-of-type::after {
-    content: ''!important;
-    display: block!important;
-} */
