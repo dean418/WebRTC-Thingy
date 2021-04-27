@@ -1,7 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300&display=swap');
 
 :root {
+    --background-dark: #1e1e1e;
+    --background-mid: #252526;
+    --background-light: #2e2e2e;
     --text: #fff;
+    --dark-text: #000;
+    --gray-highlight: #707070;
+    --highlight: #f78e30;
+    --orange-transparent: rgba(247, 142, 48, 0.4);
 }
 
 html, body {
@@ -16,12 +23,36 @@ p {
     margin: 0;
 }
 
+ul {
+    width: 100%;
+    padding: 0;
+    list-style-type: none;
+    font-size: 1rem;
+}
+
+li {
+    width: 100%;
+    text-align: center;
+    color: var(--text);
+}
+
 .containerAll {
     width: 100%;
     height: 100vh;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+}
+
+#sideBar {
+    width: 20%;
+    height: 100%;
+    background-color: var(--background-mid);
+}
+
+.mainContent {
+    width: 80%;
+    height: 100%;
 }
 
 #container {
@@ -31,7 +62,7 @@ p {
 
 .sender {
     text-align: end;
-    background-color: #2e2e2e;
+    background-color: var(--background-light);
 }
 
 .message {
@@ -43,21 +74,21 @@ p {
 
 #messageContainer {
     bottom: 0;
-    width: 100%;
+    width: 80%;
     height: 250px;
     min-height: 4%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     position: fixed;
-    background-color: #1e1e1e;
-    z-index: 2;
+    background-color: var(--background-dark);
+    z-index: 1;
 }
 
 #resizer {
     width: 100%;
     min-height: 3px;
-    background-color: #707070;
+    background-color: var(--gray-highlight);
     cursor: ns-resize;
 }
 
@@ -75,7 +106,7 @@ p {
     align-items: center;
     justify-content: flex-start;
     color: var(--text);
-    border-top: 1px solid #707070;
+    border-top: 1px solid var(--gray-highlight);
 }
 
 #message {
@@ -83,15 +114,15 @@ p {
     padding: 5px;
     margin-left: 1%;
     border: none;
-    border-bottom: 1px solid #707070;
+    border-bottom: 1px solid var(--gray-highlight);
     border-radius: 0;
     color: var(--text);
-    background-color: #1e1e1e;
+    background-color: var(--background-dark);
 }
 
 #message:focus {
     outline: none;
-    border-bottom: 1px solid #f78e30;
+    border-bottom: 1px solid var(--highlight);
 }
 
 .icon {
@@ -99,12 +130,12 @@ p {
     padding-bottom: 0;
     margin-right: 30px;
     cursor: pointer;
-    color: #fff;
+    color: var(--text);
     font-size: 1.1rem;
 }
 
 .icon:hover {
-    color: #f78e30;
+    color: var(--highlight);
 }
 
 #offer {
@@ -114,12 +145,12 @@ p {
 }
 
 .test {
-    background: rgba(247, 142, 48, 0.4);
+    background: var(--orange-transparent);
     pointer-events: none;
 }
 
 .peerCursor {
-    background: rgba(247, 142, 48, 0.4);
+    background: var(--orange-transparent);
     pointer-events: none;
 }
 
@@ -128,7 +159,7 @@ p {
     width: 2px !important;
     height: 24px;
     position: absolute;
-    background-color: #f78e30;
+    background-color: var(--highlight);
 }
 
 .peerCursor:after {
@@ -137,8 +168,8 @@ p {
     width: 100px;
     height: 20px;
     position: absolute;
-    color: #000;
-    background-color: #f78e30;
+    color: var(--dark-text);
+    background-color: var(--highlight);
     font-size: .7rem;
     z-index: 2;
 }

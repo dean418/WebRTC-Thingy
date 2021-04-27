@@ -21,8 +21,6 @@ UI.editor.onDidChangeCursorSelection((event) => {
     webRTC.sendRTC('cursor', {selection: event.selection, direction: event.selection.getDirection(),secondarySelections: event.secondarySelections});
 });
 
-
-
 offerBtn.addEventListener('click', () => {
     UI.changeConnectState();
     webRTC.createOffer();
