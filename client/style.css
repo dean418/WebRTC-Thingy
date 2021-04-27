@@ -113,13 +113,13 @@ p {
     cursor: pointer;
 }
 
-.peerCursor {
+.test {
     background: rgba(247, 142, 48, 0.4);
     pointer-events: none;
 }
 
-.test {
-    /* background: rgba(247, 142, 48, 0.4); */
+.peerCursor {
+    background: rgba(247, 142, 48, 0.4);
     pointer-events: none;
 }
 

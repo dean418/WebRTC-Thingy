@@ -18,7 +18,7 @@ UI.editor.onDidChangeModelContent(() => {
 });
 
 UI.editor.onDidChangeCursorSelection((event) => {
-    webRTC.sendRTC('cursor', {selection: event.selection, secondarySelections: event.secondarySelections});
+    webRTC.sendRTC('cursor', {selection: event.selection, direction: event.selection.getDirection(),secondarySelections: event.secondarySelections});
 });
 
 

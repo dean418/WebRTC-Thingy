@@ -16,84 +16,50 @@ class UI {
 
     static editorDecorations = [];
 
-    static createPeerCursor(selection) {
-        let {startLineNumber, startColumn, endLineNumber, endColumn, selectionStartColumn, positionColumn, positionLineNumber, selectionStartLineNumber} = selection;
-        let ranges = [];
-
-        UI.editorDecorations = UI.editor.deltaDecorations(UI.editorDecorations, []);
-
-        for (let i = 1; i <= endLineNumber; i++) {
-
-            let range;
-            let options = {className:'test', isWholeLine: false};
-
-            if (i == endLineNumber) {
-                range = new monaco.Range(startLineNumber, startColumn, endLineNumber, endColumn);
-
-                if (positionLineNumber > selectionStartLineNumber) { // selecting left to right
-                    options.className = 'peerCursor peerCursorRight';
-                } else if (positionLineNumber < selectionStartLineNumber) {
-                    options.className = 'peerCursor peerCursorLeft';
-                }
-
-                if (positionLineNumber == selectionStartLineNumber && selectionStartColumn < positionColumn) {
-                    options.className = 'peerCursor peerCursorRight';
-                } else if (positionLineNumber == selectionStartLineNumber && selectionStartColumn > positionColumn){
-                    options.className = 'peerCursor peerCursorLeft';
-                }
-
-                ranges.push({range, options});
-                break;
-            }
-
-            range = new monaco.Range(i,i,i,i);
-            options.isWholeLine = true;
-            ranges.push({range, options});
+    static getCursorDirection(direction) {
+        if (direction) {
+            console.log('left');
+            return 'peerCursor peerCursorLeft';
+        } else {
+            console.log('right');
+            return 'peerCursor peerCursorRight';
         }
-
-        UI.editorDecorations = UI.editor.deltaDecorations(UI.editorDecorations, ranges);
     }
 
-    static cpc(selection) {
-        console.log(selection);
-        let {startLineNumber, startColumn, endLineNumber, endColumn, selectionStartColumn, positionColumn} = selection;
-        let options = {className:'peerCursor'};
+    static handlePeerCursor(selection, direction) { // direction = 0 = LTR, direction = 1 = RTL
+        let {startLineNumber, startColumn, endLineNumber, endColumn, selectionStartColumn, positionColumn, positionLineNumber, selectionStartLineNumber} = selection;
+        let ranges = [];
+        let options = {className: UI.getCursorDirection(direction), isWholeLine: false};
+
+        let model = UI.editor.getModel();
 
         if (startLineNumber == endLineNumber) {
+            let range = new monaco.Range(startLineNumber, startColumn, endLineNumber, endColumn);
 
-            if (selectionStartColumn < positionColumn) {
-                options.className += ' peerCursorRight';
-            } else {
-                options.className += ' peerCursorLeft';
-            }
-
-            if (UI.editorDecorations.length > 1) {
-                UI.editorDecorations = UI.editor.deltaDecorations(UI.editorDecorations, []);
-            }
-
-            UI.editorDecorations = UI.editor.deltaDecorations([UI.editorDecorations], [
-                {range: new monaco.Range(startLineNumber, startColumn, endLineNumber, endColumn), options}
-            ]);
+            UI.addPeerCursor([{range, options}]);
             return;
         }
 
-        console.log('s: ' + startLineNumber, 'e: ' + endLineNumber);
-        let ranges = []
+        let range;
+        let lastLine;
 
-        for (let i = 1; i <= endLineNumber; i++) {
-            let range = new monaco.Range(i,i,i,i);
-            let options = {className:'test', isWholeLine: true}
+        console.log(selection);
 
-            if (i == endLineNumber) {
-                options.isWholeLine = false;
-                options.className += ' peerCursorRight'
-                range = new monaco.Range(endLineNumber, 1, endLineNumber, endColumn)
-            }
+        if (direction) {
+            range = new monaco.Range(startLineNumber, startColumn, endLineNumber, selectionStartColumn);
+            lastLine = new monaco.Range(positionLineNumber, positionColumn, positionLineNumber, model.getLineContent(positionLineNumber).length);
+        } else {
+            range = new monaco.Range(startLineNumber, startColumn, endLineNumber, model.getLineContent(endLineNumber-1));
+            lastLine = new monaco.Range(endLineNumber, 1, endLineNumber, endColumn);
 
-            ranges.push({range, options});
         }
+        ranges.push({range, options: {className: 'test', isWholeLine: false}}, {range: lastLine, options: {className: UI.getCursorDirection(direction), isWholeLine: false}});
+
+        UI.addPeerCursor(ranges);
+    }
+
+    static addPeerCursor(ranges) {
         UI.editorDecorations = UI.editor.deltaDecorations(UI.editorDecorations, ranges);
-        console.log(UI.editorDecorations);
     }
 
     static resize (event) {
