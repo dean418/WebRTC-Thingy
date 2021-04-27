@@ -17,7 +17,7 @@ class WebRTC extends SignallingServer {
     }
 
     /**
-     * Will send a JSON string through WebRTC to peers
+     * Sends a JSON string through WebRTC to peers
      *
      * @param {string} type - type of message being sent to peers [code, chat]
      * @param {String} message - user message to peers
@@ -26,15 +26,13 @@ class WebRTC extends SignallingServer {
         let data = JSON.stringify({type, message});
         this.dataChannel.send(data);
 
-        // console.log(UI.editor.getModel().getAllDecorations())
-
         if (type == 'chat') {
             UI.displayMessage(message, 'sender');
         }
     }
 
     /**
-     * Will decide what to do with a message received from peers
+     * Decides what to do with a message received from peers
      * @param {Object} message - message received from peers
      */
     handleDataChannelMessage(message) {

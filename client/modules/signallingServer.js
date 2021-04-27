@@ -1,3 +1,5 @@
+import { UI } from './UI.js';
+
 class SignallingServer {
     constructor(url) {
         this.conn = new WebSocket(url);
@@ -21,7 +23,17 @@ class SignallingServer {
      * @param {*} message - received from a peer
      */
     async onMessage(message) {
-        let data = JSON.parse(message.data);
+        const data = JSON.parse(message.data);
+
+        if (data.message == 'connected') {
+            let thisUser = false;
+
+            this.name == data.name ? thisUser = true : thisUser = false;
+
+            UI.showNewPeer(data.name, thisUser);
+            return false;
+        }
+
         if (data.iceCandidate) {
             try {
                 await this.peerConnection.addIceCandidate(data.iceCandidate);
@@ -40,9 +52,13 @@ class SignallingServer {
             this.handleOffer(data);
             return false;
         }
+        return false;
     }
 
     onOpen() {
+        this.name = prompt('enter your name');
+        this.send({type: 'initialRequest', name: this.name});
+
         console.log('connected to signaling server');
     }
 
@@ -51,4 +67,4 @@ class SignallingServer {
     }
 }
 
-export {SignallingServer};
+export { SignallingServer };

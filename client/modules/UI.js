@@ -1,6 +1,7 @@
 const messageContainer = document.getElementById('messageContainer');
 const messages = document.getElementById('messages');
 const offerBtn = document.getElementById('offer');
+const users = document.getElementById('users');
 
 class UI {
     static executeEditsCalled = false;
@@ -18,15 +19,14 @@ class UI {
 
     static getCursorDirection(direction) {
         if (direction) {
-            console.log('left');
             return 'peerCursor peerCursorLeft';
         } else {
-            console.log('right');
             return 'peerCursor peerCursorRight';
         }
     }
 
     /**
+     *  Creates the ranges necessary for a peer cursor to be displayed
      *
      * @param {Object} selection - An object containing details of a peers selection
      * @param {Number} direction - 0 indicates a LTR selection, 1 indicates a RTL selection
@@ -34,8 +34,7 @@ class UI {
     static handlePeerCursor(selection, direction) {
         let {startLineNumber, startColumn, endLineNumber, endColumn, selectionStartColumn, positionColumn, positionLineNumber} = selection;
         let ranges = [];
-        let options = {className: UI.getCursorDirection(direction), isWholeLine: false};
-        console.log(options);
+        let options = {className: UI.getCursorDirection(direction)};
         let model = UI.editor.getModel();
 
         if (startLineNumber == endLineNumber) {
@@ -57,8 +56,8 @@ class UI {
 
         }
         ranges.push(
-            {range, options: {className: 'test', isWholeLine: false}},
-            {range: lastLine, options: {className: UI.getCursorDirection(direction), isWholeLine: false}});
+            {range, options: {className: 'test'}},
+            {range: lastLine, options: {className: UI.getCursorDirection(direction)}});
 
         UI.addPeerCursor(ranges);
     }
@@ -123,6 +122,18 @@ class UI {
         } else {
             offerBtn.style.color = '#51ff0d';
         }
+    }
+
+    static showNewPeer(name, thisUser) {
+        const li = document.createElement('li');
+
+        li.textContent = name;
+
+        if (thisUser) {
+            li.textContent += ' (you)';
+        }
+
+        users.appendChild(li);
     }
 }
 

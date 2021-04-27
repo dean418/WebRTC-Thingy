@@ -10,7 +10,6 @@ class Server {
         this.wss.on('connection', (socket) => {
             const clientSocket = new SocketConnection(this, socket);
 
-            this.clients[clientSocket.id] = clientSocket;
             console.log(clientSocket.id + ' connected');
         });
     }
