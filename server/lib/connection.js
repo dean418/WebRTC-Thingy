@@ -25,21 +25,31 @@ class SocketConnection {
     }
 
     handleMessage(message) {
-        let data = JSON.parse(message);
-
-        if (data.type == 'initialRequest') {
-            this.name = data.name;
+        message = JSON.parse(message);
+        if (message.type == 'initialRequest') {
+            this.name = message.name;
             this.server.clients[this.id] = this;
 
             this.exchangePeers({message: 'connected', name: this.name});
             return;
         }
 
+        if (message.type == 'offer') {
+            this.server.rooms[message.name] = this;
+            return;
+        }
+
+        if (message.type == 'answer') {
+            console.log(message);
+            return;
+            // this.server.rooms[message.name] = this;
+        }
+
         for (const id in this.server.clients) {
             let client = this.server.clients[id];
 
             if (client.id != this.id) {
-                client.socket.send(JSON.stringify(data));
+                client.socket.send(JSON.stringify(message.data));
             }
         }
     }
