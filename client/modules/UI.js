@@ -82,7 +82,6 @@ class UI {
         let observer = new MutationObserver((mutations) => {
             try {
                 document.getElementsByClassName(sender)[0].dataset.content= sender;
-                observer.disconnect();
             } catch {}
         });
 
@@ -161,6 +160,12 @@ class UI {
         }
 
         users.appendChild(li);
+    }
+
+    static clearPeerList() {
+        while (users.firstChild) {
+            users.removeChild(users.lastChild);
+          }
     }
 }
 

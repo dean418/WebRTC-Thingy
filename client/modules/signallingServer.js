@@ -34,6 +34,11 @@ class SignallingServer {
             return false;
         }
 
+        if (data.message == 'disconnected') {
+            UI.clearPeerList();
+            return false;
+        }
+
         if (data.iceCandidate) {
             try {
                 await this.peerConnection.addIceCandidate(data.iceCandidate);
