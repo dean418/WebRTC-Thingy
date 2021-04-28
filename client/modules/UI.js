@@ -15,6 +15,7 @@ class UI {
         extraEditorClassName: 'superEditor'
     });
 
+    static peerNames = new Set();
     static editorDecorations = [];
 
     static getCursorDirection(direction) {
@@ -38,6 +39,8 @@ class UI {
         let options = {className: sender + ' peerCursor peerCursorLeft'};
         let model = UI.editor.getModel();
 
+        UI.peerNames.add(sender);
+
         if (startLineNumber == endLineNumber) {
             let range = new monaco.Range(startLineNumber, startColumn, endLineNumber, endColumn);
             UI.addPeerCursor([{range, options}], sender);
@@ -59,7 +62,7 @@ class UI {
             {range, options: {className: 'highlight'}},
             {range: lastLine, options: {className: `${sender} ${UI.getCursorDirection(direction)}`}});
 
-        UI.addPeerCursor(ranges, sender);
+        UI.addPeerCursor(ranges);
     }
 
     /**
@@ -67,22 +70,24 @@ class UI {
      *
      * @param {[Object]} ranges - a list of objects containing an instance of monaco.Range and an options object
      */
-    static addPeerCursor(ranges, sender) {
+    static addPeerCursor(ranges) {
         UI.editorDecorations = UI.editor.deltaDecorations(UI.editorDecorations, ranges);
-        UI.watchPeerCursor(sender);
     }
 
     /**
      * Finds a cursor decoration in the DOM and adds the peers username to their cursor
-     * @param {String} sender - username of user
+     *
      */
-    static watchPeerCursor(sender) {
+    static watchPeerCursor() {
         const targetNode = document.getElementsByClassName('view-overlays')[0];
 
         let observer = new MutationObserver((mutations) => {
             try {
-                document.getElementsByClassName(sender)[0].dataset.content= sender;
-            } catch {}
+                let peerNames = Array.from(UI.peerNames);
+                for (let i = 0; i < peerNames.length; i++) {
+                    document.getElementsByClassName(peerNames[i])[0].dataset.content= peerNames[i];
+                }
+            } catch{}
         });
 
         let observerConfig = {

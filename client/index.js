@@ -37,3 +37,5 @@ resizer.addEventListener('mousedown', () => {
 window.addEventListener('mouseup', () => {
     window.removeEventListener('mousemove', UI.resize);
 });
+
+UI.watchPeerCursor();
