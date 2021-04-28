@@ -5,7 +5,7 @@ class SocketConnection {
         this.server = server;
         this.socket = socket;
         this.id = nanoid();
-        this.name = ''
+        this.name = '';
 
         this.socket.on('message', this.handleMessage.bind(this));
         this.socket.on('close', this.handleClose.bind(this));
@@ -16,10 +16,10 @@ class SocketConnection {
         for (const id in this.server.clients) {
             let client = this.server.clients[id];
 
-            client.socket.send(JSON.stringify(message));
+            client.socket.send(JSON.stringify(message)); // send client name to all peers
 
             if (this.id != client.id) {
-                this.socket.send(JSON.stringify({message: 'connected', name: client.name}))
+                this.socket.send(JSON.stringify({message: 'connected', name: client.name})); // send peers to client
             }
         }
     }
@@ -46,6 +46,15 @@ class SocketConnection {
 
     handleClose() {
         delete this.server.clients[this.id];
+
+        for (const [key, client] of Object.entries(this.server.clients)) {
+            client.socket.send(JSON.stringify({message: 'disconnected'}));
+
+            for (const [key, peer] of Object.entries(this.server.clients)) {
+                client.socket.send(JSON.stringify({message: 'connected', name: peer.name}));
+            }
+        }
+
         console.log(this.id + ' disconnected');
     }
 }
