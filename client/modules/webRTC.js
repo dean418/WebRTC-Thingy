@@ -40,7 +40,7 @@ class WebRTC extends SignallingServer {
 
         switch (data.type) {
             case 'cursor':
-                UI.handlePeerCursor(data.message.selection, data.message.direction);
+                UI.handlePeerCursor(data.message.selection, data.message.direction, data.sender);
                 break;
             case 'code':
                 UI.updateCode(data.message);

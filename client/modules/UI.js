@@ -30,17 +30,17 @@ class UI {
      *
      * @param {Object} selection - An object containing details of a peers selection
      * @param {Number} direction - 0 indicates a LTR selection, 1 indicates a RTL selection
+     * @param {String} sender - username of peer
      */
-    static handlePeerCursor(selection, direction) {
+    static handlePeerCursor(selection, direction, sender) {
         let {startLineNumber, startColumn, endLineNumber, endColumn, selectionStartColumn, positionColumn, positionLineNumber} = selection;
         let ranges = [];
-        let options = {className: UI.getCursorDirection(direction)};
+        let options = {className: sender + ' peerCursor peerCursorLeft'};
         let model = UI.editor.getModel();
 
         if (startLineNumber == endLineNumber) {
             let range = new monaco.Range(startLineNumber, startColumn, endLineNumber, endColumn);
-
-            UI.addPeerCursor([{range, options}]);
+            UI.addPeerCursor([{range, options}], sender);
             return;
         }
 
@@ -53,13 +53,13 @@ class UI {
         } else {
             range = new monaco.Range(startLineNumber, startColumn, endLineNumber, model.getLineContent(endLineNumber-1));
             lastLine = new monaco.Range(endLineNumber, 1, endLineNumber, endColumn);
-
         }
-        ranges.push(
-            {range, options: {className: 'test'}},
-            {range: lastLine, options: {className: UI.getCursorDirection(direction)}});
 
-        UI.addPeerCursor(ranges);
+        ranges.push(
+            {range, options: {className: 'highlight'}},
+            {range: lastLine, options: {className: `${sender} ${UI.getCursorDirection(direction)}`}});
+
+        UI.addPeerCursor(ranges, sender);
     }
 
     /**
@@ -67,14 +67,32 @@ class UI {
      *
      * @param {[Object]} ranges - a list of objects containing an instance of monaco.Range and an options object
      */
-    static addPeerCursor(ranges) {
-        let lastSelection = ranges[ranges.length-1];
-
-        if (lastSelection.range.startColumn == 1 && lastSelection.range.endColumn == 1) {
-            lastSelection.options.className = 'peerCursor peerCursorLeft';
-        }
-
+    static addPeerCursor(ranges, sender) {
         UI.editorDecorations = UI.editor.deltaDecorations(UI.editorDecorations, ranges);
+        UI.watchPeerCursor(sender);
+    }
+
+    /**
+     * Finds a cursor decoration in the DOM and adds the peers username to their cursor
+     * @param {String} sender - username of user
+     */
+    static watchPeerCursor(sender) {
+        const targetNode = document.getElementsByClassName('view-overlays')[0];
+
+        let observer = new MutationObserver((mutations) => {
+            try {
+                document.getElementsByClassName(sender)[0].dataset.content= sender;
+                observer.disconnect();
+            } catch {}
+        });
+
+        let observerConfig = {
+            attributes: true,
+            childList: true,
+            characterData: true
+        };
+
+        observer.observe(targetNode, observerConfig);
     }
 
     /**

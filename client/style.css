@@ -151,7 +151,7 @@ li {
     cursor: pointer;
 }
 
-.test {
+.highlight {
     background: var(--orange-transparent);
     pointer-events: none;
 }
@@ -170,7 +170,7 @@ li {
 }
 
 .peerCursor:after {
-    content: 'mad developer';
+    content: attr(data-content);
     top: -19px;
     width: 100px;
     height: 20px;
